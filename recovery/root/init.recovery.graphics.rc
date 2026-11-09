@@ -1,0 +1,15 @@
+# Raphael's stock allocator registers both 3.0 and 4.0 interfaces.
+service vendor.qti.hardware.display.allocator /vendor/bin/hw/vendor.qti.hardware.display.allocator-service
+    class hal
+    user system
+    group graphics drmrpc
+    capabilities SYS_NICE
+    interface android.hardware.graphics.allocator@3.0::IAllocator default
+    interface android.hardware.graphics.allocator@4.0::IAllocator default
+    interface vendor.qti.hardware.display.allocator@3.0::IQtiAllocator default
+    interface vendor.qti.hardware.display.allocator@4.0::IQtiAllocator default
+    seclabel u:r:recovery:s0
+
+# Start from the ramdisk before recovery temporarily mounts Android's vendor.
+on init
+    start vendor.qti.hardware.display.allocator

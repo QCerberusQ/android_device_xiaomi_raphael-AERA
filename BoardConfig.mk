@@ -1,0 +1,210 @@
+#
+# Copyright (C) 2025 Team Win Recovery Project
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+DEVICE_PATH := device/xiaomi/raphael
+
+# Allow building with minimal manifest
+ALLOW_MISSING_DEPENDENCIES := true
+BUILD_BROKEN_DUP_RULES := true
+BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
+BUILD_BROKEN_MISSING_REQUIRED_MODULES := true
+
+# Architecture
+TARGET_ARCH := arm64
+TARGET_ARCH_VARIANT := armv8-2a-dotprod
+TARGET_CPU_ABI := arm64-v8a
+TARGET_CPU_VARIANT := kryo385
+
+TARGET_2ND_ARCH := arm
+TARGET_2ND_ARCH_VARIANT := armv8-2a
+TARGET_2ND_CPU_ABI := armeabi-v7a
+TARGET_2ND_CPU_ABI2 := armeabi
+TARGET_2ND_CPU_VARIANT := kryo385
+
+TARGET_SUPPORTS_64_BIT_APPS := true
+TARGET_USES_64_BIT_BINDER := true
+
+# Assert
+TARGET_OTA_ASSERT_DEVICE := raphael,raphaelin
+
+# Enable CPUSets
+ENABLE_CPUSETS := true
+ENABLE_SCHEDBOOST := true
+
+# Bootloader
+TARGET_BOOTLOADER_BOARD_NAME := msmnile
+TARGET_NO_BOOTLOADER := true
+TARGET_USES_VULKAN := true
+TARGET_USES_UEFI := true
+
+# Platform
+BOARD_USES_QCOM_HARDWARE := true
+TARGET_BOARD_PLATFORM := msmnile
+TARGET_BOARD_PLATFORM_GPU := qcom-adreno640
+QCOM_BOARD_PLATFORMS += msmnile
+
+# Kernel
+TARGET_KERNEL_ARCH := arm64
+TARGET_KERNEL_HEADER_ARCH := arm64
+BOARD_KERNEL_CMDLINE := androidboot.hardware=qcom androidboot.usbcontroller=a600000.dwc3 service_locator.enable=1 lpm_levels.sleep_disabled=1 loop.max_part=7 kpti=off
+BOARD_KERNEL_CMDLINE += console=ttyMSM0,115200n8 earlycon=msm_geni_serial,0xa90000 androidboot.console=ttyMSM0
+BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
+BOARD_KERNEL_CMDLINE += androidboot.boot_devices=soc/1d84000.ufshc
+BOARD_KERNEL_CMDLINE += audit=0
+BOARD_KERNEL_BASE := 0x00000000
+BOARD_KERNEL_PAGESIZE := 4096
+BOARD_MKBOOTIMG_ARGS := --ramdisk_offset 0x01000000 --tags_offset 0x00000100
+BOARD_BOOT_HEADER_VERSION := 1
+BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
+TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/Image.gz-dtb
+BOARD_INCLUDE_RECOVERY_DTBO := true
+BOARD_PREBUILT_DTBOIMAGE := $(DEVICE_PATH)/prebuilt/dtbo.img
+
+# Partitions
+BOARD_FLASH_BLOCK_SIZE := 262144
+BOARD_RECOVERYIMAGE_PARTITION_SIZE := 67108864
+BOARD_USES_METADATA_PARTITION := true
+BOARD_HAS_LARGE_FILESYSTEM := true
+TARGET_USES_MKE2FS := true
+TARGET_USERIMAGES_USE_EXT4 := true
+TARGET_USERIMAGES_USE_F2FS := true
+
+SSI_PARTITIONS := product system system_ext
+TREBLE_PARTITIONS := odm vendor
+ALL_PARTITIONS := $(SSI_PARTITIONS) $(TREBLE_PARTITIONS)
+
+$(foreach p, $(call to-upper, $(SSI_PARTITIONS)), \
+    $(eval BOARD_$(p)IMAGE_FILE_SYSTEM_TYPE := ext4))
+
+$(foreach p, $(call to-upper, $(TREBLE_PARTITIONS)), \
+    $(eval BOARD_$(p)IMAGE_FILE_SYSTEM_TYPE := erofs))
+
+$(foreach p, $(call to-upper, $(ALL_PARTITIONS)), \
+    $(eval TARGET_COPY_OUT_$(p) := $(call to-lower, $(p))))
+
+# Partitions - Dynamic
+BOARD_SUPER_PARTITION_GROUPS := qti_dynamic_partitions
+BOARD_QTI_DYNAMIC_PARTITIONS_PARTITION_LIST := $(ALL_PARTITIONS)
+BOARD_SUPER_PARTITION_SIZE := 6442450944
+BOARD_SUPER_PARTITION_METADATA_DEVICE := system
+BOARD_SUPER_PARTITION_BLOCK_DEVICES := system vendor cust
+BOARD_SUPER_PARTITION_SYSTEM_DEVICE_SIZE := 3758096384
+BOARD_SUPER_PARTITION_VENDOR_DEVICE_SIZE := 1610612736
+BOARD_SUPER_PARTITION_CUST_DEVICE_SIZE := 1073741824
+BOARD_QTI_DYNAMIC_PARTITIONS_SIZE := 6438256640
+
+# Security patch level
+PLATFORM_VERSION := 99.87.36
+PLATFORM_VERSION_LAST_STABLE := $(PLATFORM_VERSION)
+PLATFORM_SECURITY_PATCH := 2099-12-31
+VENDOR_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
+
+# AVB
+BOARD_AVB_ENABLE := true
+BOARD_AVB_ROLLBACK_INDEX := $(PLATFORM_SECURITY_PATCH_TIMESTAMP)
+BOARD_AVB_RECOVERY_KEY_PATH := external/avb/test/data/testkey_rsa4096.pem
+BOARD_AVB_RECOVERY_ALGORITHM := SHA256_RSA4096
+BOARD_AVB_RECOVERY_ROLLBACK_INDEX := 1
+BOARD_AVB_RECOVERY_ROLLBACK_INDEX_LOCATION := 1
+BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --flags 3
+
+# Properties
+TARGET_VENDOR_PROP += $(DEVICE_PATH)/vendor.prop
+
+# System as Root
+BOARD_BUILD_SYSTEM_ROOT_IMAGE := false
+BOARD_ROOT_EXTRA_FOLDERS := bluetooth dsp firmware persist
+BOARD_ROOT_EXTRA_FOLDERS += metadata
+
+# Extra
+BOARD_SUPPRESS_SECURE_ERASE := true
+
+# Recovery
+TARGET_RECOVERY_DEVICE_DIRS += $(DEVICE_PATH)
+TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery/root/system/etc/recovery.fstab
+TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
+RECOVERY_SDCARD_ON_DATA := true
+TARGET_RECOVERY_QCOM_RTC_FIX := true
+
+# Relink device libraries before AERA assembles the recovery ramdisk.
+AERA_RECOVERY_ADDITIONAL_RELINK_LIBRARY_FILES += \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libion.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libxml2.so \
+    $(TARGET_OUT_SYSTEM_EXT_SHARED_LIBRARIES)/vendor.display.config@1.0.so \
+    $(TARGET_OUT_SYSTEM_EXT_SHARED_LIBRARIES)/vendor.display.config@2.0.so \
+    $(TARGET_OUT_SYSTEM_EXT_SHARED_LIBRARIES)/libdisplayconfig.qti.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.boot-V1-ndk.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libboot_control_client.so
+
+# AERA - Display & Theme
+AERA_BRIGHTNESS_PATH := "/sys/class/backlight/panel0-backlight/brightness"
+AERA_MAX_BRIGHTNESS := 2047
+AERA_DEFAULT_BRIGHTNESS := 1200
+AERA_THEME := portrait_hdpi
+AERA_FRAMERATE := 60
+AERA_UI_ADAPTIVE_RESOLUTION := true
+
+# AERA - Hardware & Input
+AERA_INPUT_BLACKLIST := "hbtp_vm"
+AERA_HAS_EDL_MODE := true
+AERA_EXCLUDE_DEFAULT_USB_INIT := true
+
+# AERA - File System & Storage
+AERA_INCLUDE_NTFS_3G := true
+AERA_PREPARE_DATA_MEDIA_EARLY := true
+AERA_ENABLE_FS_COMPRESSION := true
+
+# AERA - System Tools
+AERA_EXCLUDE_APEX := true
+AERA_INCLUDE_RESETPROP := true
+AERA_INCLUDE_LIBRESETPROP := true
+AERA_INCLUDE_REPACKTOOLS := true
+
+# AERA - Language
+AERA_DEFAULT_LANGUAGE := en
+AERA_EXTRA_LANGUAGES := true
+
+# AERA - Crypto
+AERA_INCLUDE_CRYPTO := true
+AERA_INCLUDE_CRYPTO_FBE := true
+AERA_INCLUDE_FBE_METADATA_DECRYPT := true
+BOARD_USES_QCOM_FBE_DECRYPTION := true
+AERA_USE_FSCRYPT_POLICY := 2
+
+# AERA - Debug
+TARGET_USES_LOGD := true
+AERA_INCLUDE_LOGCAT := true
+
+# AERA - Logical partition tools
+AERA_INCLUDE_LPDUMP := true
+AERA_INCLUDE_LPTOOLS := true
+
+# AERA - Fastbootd
+AERA_INCLUDE_FASTBOOTD := true
+
+# AERA - Vibrator
+AERA_SUPPORT_INPUT_AIDL_HAPTICS := true
+
+# AERA - Adreno/GPU graphics dependencies
+# Build the native-buffer runtime against AERA's Android 16 framework.
+# The relink rule also requests these modules and installs them in /system/lib64.
+AERA_RECOVERY_ADDITIONAL_RELINK_LIBRARY_FILES += \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libnativewindow.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libui.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libgralloctypes.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.allocator@2.0.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.allocator@3.0.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.allocator@4.0.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.common@1.0.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.common@1.1.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.common@1.2.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.mapper@2.0.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.mapper@2.1.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.mapper@3.0.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.mapper@4.0.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.allocator-V2-ndk.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.common-V6-ndk.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.common-V2-ndk.so

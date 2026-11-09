@@ -45,7 +45,7 @@ if [ "${AERA_BUILD_DEVICE:-}" = "raphael" ]; then
 
     # Theme/Settings Storage
     export AERA_ALLOW_EARLY_SETTINGS_LOAD=1
-    export AERA_SETTINGS_ROOT_DIRECTORY=/persist/recovery
+    export AERA_SETTINGS_ROOT_DIRECTORY=/data/recovery
     export AERA_MISCELLANEOUS_ROOT_DIRECTORY=/sdcard
 
     # Maintainer Stuff

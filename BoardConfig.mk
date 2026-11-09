@@ -115,7 +115,6 @@ BOARD_AVB_MAKE_VBMETA_IMAGE_ARGS += --flags 3
 TARGET_VENDOR_PROP += $(DEVICE_PATH)/vendor.prop
 
 # System as Root
-BOARD_BUILD_SYSTEM_ROOT_IMAGE := false
 BOARD_ROOT_EXTRA_FOLDERS := bluetooth dsp firmware persist
 BOARD_ROOT_EXTRA_FOLDERS += metadata
 

@@ -22,7 +22,7 @@
 if [ "${AERA_BUILD_DEVICE:-}" = "raphael" ]; then
     export LC_ALL="C"
     export AERA_BUILD_STATUS=Unofficial
-    export AERA_BUILD_TYPE=Alpha
+    export AERA_BUILD_TYPE=Beta
     export AERA_USE_BASH_SHELL=1
     export AERA_ASH_IS_BASH=1
     export AERA_USE_TAR_BINARY=1

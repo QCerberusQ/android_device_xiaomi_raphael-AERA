@@ -1,5 +1,4 @@
 import /init.recovery.qcom_decrypt.rc
-import /init.recovery.graphics.rc
 
 on init
     write /sys/class/backlight/panel0-backlight/brightness 200
@@ -9,6 +8,18 @@ on fs
     symlink /dev/block/platform/soc/${ro.boot.bootdevice} /dev/block/bootdevice
     wait /dev/block/bootdevice/by-name/system 5
     exec u:r:recovery:s0 -- /system/bin/merge-fstab.sh
+
+# Raphael's stock allocator registers both 3.0 and 4.0 interfaces.
+service vendor.qti.hardware.display.allocator /vendor/bin/hw/vendor.qti.hardware.display.allocator-service
+    class hal
+    user system
+    group graphics drmrpc
+    capabilities SYS_NICE
+    interface android.hardware.graphics.allocator@3.0::IAllocator default
+    interface android.hardware.graphics.allocator@4.0::IAllocator default
+    interface vendor.qti.hardware.display.allocator@3.0::IQtiAllocator default
+    interface vendor.qti.hardware.display.allocator@4.0::IQtiAllocator default
+    seclabel u:r:recovery:s0
 
 service vendor.qti.vibrator /vendor/bin/hw/vendor.qti.hardware.vibrator.service
     user root

@@ -10,7 +10,7 @@ on fs
     exec u:r:recovery:s0 -- /system/bin/merge-fstab.sh
 
 # Raphael's stock allocator registers both 3.0 and 4.0 interfaces.
-service vendor.qti.hardware.display.allocator /vendor/bin/hw/vendor.qti.hardware.display.allocator-service
+service aera-graphics-allocator /vendor/bin/hw/vendor.qti.hardware.display.allocator-service
     class hal
     user system
     group graphics drmrpc

@@ -30,11 +30,6 @@ TARGET_RECOVERY_DEVICE_MODULES += \
     vendor.display.config@2.0 \
     libdisplayconfig.qti
 
-# AERA recovery and its FBE libtar also link these on A-only devices.
-TARGET_RECOVERY_DEVICE_MODULES += \
-    android.hardware.boot-V1-ndk \
-    libboot_control_client
-
 # Adreno
 PRODUCT_VENDOR_PROPERTIES += \
     ro.hardware.egl=adreno

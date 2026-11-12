@@ -123,7 +123,6 @@ AERA_USE_EXTREME_COMPRESSION := 1
 
 # Recovery
 TARGET_RECOVERY_DEVICE_DIRS += $(DEVICE_PATH)
-TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery/root/system/etc/recovery.fstab
 TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
 RECOVERY_SDCARD_ON_DATA := true
 TARGET_RECOVERY_QCOM_RTC_FIX := true
@@ -180,5 +179,16 @@ AERA_SUPPORT_INPUT_AIDL_HAPTICS := true
 # AERA - Adreno/GPU graphics dependencies
 AERA_UI_LEGACY_KGSL_GPU := true
 
-TARGET_RECOVERY_DEVICE_MODULES += $(RAPHAEL_RECOVERY_GRAPHICS_LIBRARIES)
-RECOVERY_LIBRARY_SOURCE_FILES += $(RAPHAEL_RECOVERY_GRAPHICS_LIBRARIES)
+TARGET_RECOVERY_DEVICE_MODULES += \
+    android.hardware.keymaster@3.0-impl \
+    libkeymaster3device \
+    libpuresoftkeymasterdevice \
+    android.hardware.boot-V1-ndk \
+    libboot_control_client
+
+AERA_RECOVERY_ADDITIONAL_RELINK_LIBRARY_FILES += \
+    $(TARGET_OUT_VENDOR_SHARED_LIBRARIES)/hw/android.hardware.keymaster@3.0-impl.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster3device.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libpuresoftkeymasterdevice.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.boot-V1-ndk.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libboot_control_client.so

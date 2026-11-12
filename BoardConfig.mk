@@ -180,20 +180,19 @@ AERA_SUPPORT_INPUT_AIDL_HAPTICS := true
 # AERA - Adreno/GPU graphics dependencies
 # Build the native-buffer runtime against AERA's Android 16 framework.
 # The relink rule also requests these modules and installs them in /system/lib64.
-AERA_RECOVERY_ADDITIONAL_RELINK_LIBRARY_FILES += \
-    $(TARGET_OUT_SHARED_LIBRARIES)/libnativewindow.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/libui.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/libgralloctypes.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.allocator@2.0.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.allocator@3.0.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.allocator@4.0.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.common@1.0.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.common@1.1.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.common@1.2.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.mapper@2.0.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.mapper@2.1.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.mapper@3.0.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.mapper@4.0.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.allocator-V2-ndk.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.common-V6-ndk.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.common-V2-ndk.so
+RAPHAEL_RECOVERY_GRAPHICS_LIBRARIES := \
+    android.hardware.graphics.allocator@3.0 \
+    android.hardware.graphics.allocator@4.0 \
+    android.hardware.graphics.allocator-V2-ndk \
+    android.hardware.graphics.common-V5-ndk \
+    android.hardware.graphics.mapper@3.0 \
+    android.hardware.graphics.mapper@4.0 \
+    libgralloctypes \
+    libhardware \
+    libjsoncpp \
+    libnativewindow \
+    libsync \
+    libui
+
+TARGET_RECOVERY_DEVICE_MODULES += $(RAPHAEL_RECOVERY_GRAPHICS_LIBRARIES)
+RECOVERY_LIBRARY_SOURCE_FILES += $(RAPHAEL_RECOVERY_GRAPHICS_LIBRARIES)

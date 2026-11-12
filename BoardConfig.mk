@@ -178,17 +178,3 @@ AERA_SUPPORT_INPUT_AIDL_HAPTICS := true
 
 # AERA - Adreno/GPU graphics dependencies
 AERA_UI_LEGACY_KGSL_GPU := true
-
-TARGET_RECOVERY_DEVICE_MODULES += \
-    android.hardware.keymaster@3.0-impl \
-    libkeymaster3device \
-    libpuresoftkeymasterdevice \
-    android.hardware.boot-V1-ndk \
-    libboot_control_client
-
-AERA_RECOVERY_ADDITIONAL_RELINK_LIBRARY_FILES += \
-    $(TARGET_OUT_VENDOR_SHARED_LIBRARIES)/hw/android.hardware.keymaster@3.0-impl.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/libkeymaster3device.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/libpuresoftkeymasterdevice.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.boot-V1-ndk.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/libboot_control_client.so

@@ -178,21 +178,7 @@ AERA_INCLUDE_FASTBOOTD := true
 AERA_SUPPORT_INPUT_AIDL_HAPTICS := true
 
 # AERA - Adreno/GPU graphics dependencies
-# Build the native-buffer runtime against AERA's Android 16 framework.
-# The relink rule also requests these modules and installs them in /system/lib64.
-RAPHAEL_RECOVERY_GRAPHICS_LIBRARIES := \
-    android.hardware.graphics.allocator@3.0 \
-    android.hardware.graphics.allocator@4.0 \
-    android.hardware.graphics.allocator-V2-ndk \
-    android.hardware.graphics.common-V5-ndk \
-    android.hardware.graphics.mapper@3.0 \
-    android.hardware.graphics.mapper@4.0 \
-    libgralloctypes \
-    libhardware \
-    libjsoncpp \
-    libnativewindow \
-    libsync \
-    libui
+AERA_UI_LEGACY_KGSL_GPU := true
 
 TARGET_RECOVERY_DEVICE_MODULES += $(RAPHAEL_RECOVERY_GRAPHICS_LIBRARIES)
 RECOVERY_LIBRARY_SOURCE_FILES += $(RAPHAEL_RECOVERY_GRAPHICS_LIBRARIES)

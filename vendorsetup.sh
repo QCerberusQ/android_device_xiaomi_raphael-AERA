@@ -19,7 +19,27 @@
 # 	Please maintain this if you use this script or any part of it
 #
 # Select the device before sourcing build/envsetup.sh; use a fresh build shell.
-if [ "${AERA_BUILD_DEVICE:-}" = "raphael" ]; then
+FDEVICE="raphael"
+
+aera_get_target_device() {
+  if echo "$BASH_SOURCE" | grep -q "/$FDEVICE/"; then
+      AERA_BUILD_DEVICE="$FDEVICE";
+  elif set | grep BASH_ARGV | grep -w \"$FDEVICE\"; then
+      AERA_BUILD_DEVICE="$FDEVICE";
+  elif echo "${BASH_SOURCE[0]}" | grep -q "/$FDEVICE/"; then
+      AERA_BUILD_DEVICE="$FDEVICE";
+  elif echo "$0" | grep -q "$FDEVICE"; then
+      AERA_BUILD_DEVICE="$FDEVICE";
+  fi
+}
+
+if [ -z "$1" -a -z "$AERA_BUILD_DEVICE" ]; then
+   aera_get_target_device
+fi
+
+if [ "$1" = "$FDEVICE" -o "$AERA_BUILD_DEVICE" = "$FDEVICE" ]; then
+
+
     export LC_ALL="C"
     export AERA_BUILD_STATUS=Unofficial
     export AERA_BUILD_TYPE=Beta
@@ -50,4 +70,9 @@ if [ "${AERA_BUILD_DEVICE:-}" = "raphael" ]; then
 
     # Maintainer Stuff
     export AERA_MAINTAINER="QCerberusQ"
+    
+else
+	if [ -z "$AERA_BUILD_DEVICE" -a -z "$BASH_SOURCE" ]; then
+		echo "I: This script requires bash. Not processing the $FDEVICE $(basename $0)"
+	fi
 fi

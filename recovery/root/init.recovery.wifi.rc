@@ -1,0 +1,43 @@
+# Wi-Fi in AERA on raphael (6.12 kernel). Nothing starts at boot.
+#
+# AERA's Wi-Fi switch sets sys.aera.wlan.up=1 and waits (20 s) for the
+# wpa_supplicant service to run, then (60 s) for its control socket. The
+# modem cold start takes ~20 s, so the service runs at once and does the
+# bring-up (raphael-wifi up: read-only EFS via rmtfs, tqftpserv, modem start,
+# WLAN board data, qcacld) before it execs wpa_supplicant.
+# All daemon state lives in /tmp (RAM).
+
+on property:sys.aera.wlan.up=1
+    mkdir /tmp/recovery 0777
+    mkdir /tmp/recovery/sockets 0777
+    start wpa_supplicant
+    setprop sys.aera.wlan.up 0
+
+service wpa_supplicant /system/bin/sh -c "/system/bin/raphael-wifi up && exec /system/bin/wpa_supplicant -Dnl80211 -iwlan0 -O/tmp/recovery/sockets -c/vendor/etc/wifi/wpa_supplicant.conf"
+    disabled
+    oneshot
+    user root
+    group root wifi inet net_admin
+    seclabel u:r:recovery:s0
+
+# EFS for the modem, served read-only: writes stay in rmtfs' RAM buffers.
+service raphael_rmtfs /system/bin/rmtfs -P -r -o /dev/block/bootdevice/by-name
+    user root
+    group root
+    disabled
+    seclabel u:r:recovery:s0
+
+# Modem file requests (wlanmdsp.mbn etc.) from the modem partition; its
+# read-write area is /tmp/raphael-wifi/tqftp.
+service raphael_tqftp /system/bin/tqftpserv
+    user root
+    group root
+    disabled
+    seclabel u:r:recovery:s0
+
+# Command-line Wi-Fi (raphael-wifi start/connect) without the AERA UI
+service raphael_wpa /system/bin/wpa_supplicant -i wlan0 -D nl80211 -c /tmp/raphael-wifi/wpa.conf
+    user root
+    group root
+    disabled
+    seclabel u:r:recovery:s0

@@ -52,7 +52,8 @@ BOARD_KERNEL_CMDLINE := androidboot.hardware=qcom androidboot.usbcontroller=a600
 BOARD_KERNEL_CMDLINE += console=ttyMSM0,115200n8 earlycon=msm_geni_serial,0xa90000 androidboot.console=ttyMSM0
 BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
 BOARD_KERNEL_CMDLINE += androidboot.boot_devices=soc/1d84000.ufshc
-BOARD_KERNEL_CMDLINE += audit=0
+BOARD_KERNEL_CMDLINE += printk.devkmsg=on clk_ignore_unused pd_ignore_unused panic=5 swiotlb=2048
+BOARD_KERNEL_CMDLINE += androidboot.fstab_suffix=qcom sysctl.kernel.firmware_config.force_sysfs_fallback=1 log_buf_len=4M firmware_class.path=/vendor/firmware_mnt/image irqchip.gicv3_pseudo_nmi=1
 BOARD_KERNEL_BASE := 0x00000000
 BOARD_KERNEL_PAGESIZE := 4096
 BOARD_MKBOOTIMG_ARGS := --ramdisk_offset 0x01000000 --tags_offset 0x00000100

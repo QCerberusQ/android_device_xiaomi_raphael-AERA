@@ -39,7 +39,6 @@ fi
 
 if [ "$1" = "$FDEVICE" -o "$AERA_BUILD_DEVICE" = "$FDEVICE" ]; then
 
-
     export LC_ALL="C"
     export AERA_BUILD_STATUS=Unofficial
     export AERA_BUILD_TYPE=Beta

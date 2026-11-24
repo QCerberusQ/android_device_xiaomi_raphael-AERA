@@ -30,10 +30,6 @@ TARGET_RECOVERY_DEVICE_MODULES += \
     vendor.display.config@2.0 \
     libdisplayconfig.qti
 
-# Adreno
-PRODUCT_VENDOR_PROPERTIES += \
-    ro.hardware.egl=adreno
-
 # Overrides
 PRODUCT_BUILD_PROP_OVERRIDES += \
     PRODUCT_NAME=$(PRODUCT_RELEASE_NAME) \

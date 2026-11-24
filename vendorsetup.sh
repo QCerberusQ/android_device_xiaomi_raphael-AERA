@@ -40,10 +40,12 @@ fi
 if [ "$1" = "$FDEVICE" -o "$AERA_BUILD_DEVICE" = "$FDEVICE" ]; then
 
     export LC_ALL="C"
+    export AERA_PRODUCT_PREFIX=AERA
     export AERA_BUILD_STATUS=Unofficial
     export AERA_BUILD_TYPE=Beta
-    export AERA_USE_BASH_SHELL=1
-    export AERA_ASH_IS_BASH=1
+    export AERA_FORCE_PREBUILT_KERNEL=1
+    export AERA_USE_UPDATED_MAGISKBOOT=1
+    export AERA_USE_BUSYBOX_BINARY=1
     export AERA_USE_TAR_BINARY=1
     export AERA_USE_SED_BINARY=1
     export AERA_USE_XZ_UTILS=1
@@ -57,12 +59,17 @@ if [ "$1" = "$FDEVICE" -o "$AERA_BUILD_DEVICE" = "$FDEVICE" ]; then
     # Preserve the existing partition/installer behavior.
     export AERA_USE_DMCTL=1
     export AERA_NO_TREBLE_COMPATIBILITY_CHECK=1
+    export AERA_UNMOUNT_SDCARDS_BEFORE_REBOOT=1
 
-    # Preserve the original alias; AERA_TARGET_DEVICES uses the board assertions.
-    # An explicit AERA_TARGET_DEVICES list awaits firmware identifier checks.
+    # Keep image within the 64 MiB recovery partition budget during bring-up.
+    export AERA_ENABLE_ROOT_MANAGER=0
+    export AERA_EXCLUDE_NANO_EDITOR=1
+
+    # Device assertions
     export TARGET_DEVICE_ALT="raphaelin"
+    export AERA_TARGET_DEVICES="raphael,raphaelin"
 
-    # Theme/Settings Storage
+    # Theme/Settings Storage (/persist is unencrypted and readable before unlock)
     export AERA_ALLOW_EARLY_SETTINGS_LOAD=1
     export AERA_SETTINGS_ROOT_DIRECTORY=/data/recovery
     export AERA_MISCELLANEOUS_ROOT_DIRECTORY=/sdcard

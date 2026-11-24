@@ -7,6 +7,9 @@
 # Hardware platform
 PRODUCT_PLATFORM := msmnile
 
+# SM8150 is a native 4 KiB-page platform; skip Android 16's 16 KiB prebuilt ELF check.
+PRODUCT_CHECK_PREBUILT_MAX_PAGE_SIZE := false
+
 # API
 PRODUCT_SHIPPING_API_LEVEL := 28
 
@@ -21,14 +24,6 @@ PRODUCT_USE_DYNAMIC_PARTITIONS := true
 # Fastbootd (Mock implementation for recovery)
 PRODUCT_PACKAGES += \
     android.hardware.fastboot@1.1-impl-mock
-
-# Additional binaries & libraries needed for recovery
-TARGET_RECOVERY_DEVICE_MODULES += \
-    libion \
-    libxml2 \
-    vendor.display.config@1.0 \
-    vendor.display.config@2.0 \
-    libdisplayconfig.qti
 
 # Overrides
 PRODUCT_BUILD_PROP_OVERRIDES += \

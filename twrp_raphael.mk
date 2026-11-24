@@ -6,7 +6,7 @@
 
 # Inherit AOSP product makefiles
 $(call inherit-product, $(SRC_TARGET_DIR)/product/base.mk)
-$(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit_only.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 
 # Device Definitions
 PRODUCT_RELEASE_NAME := raphael

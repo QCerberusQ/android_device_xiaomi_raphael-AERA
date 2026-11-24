@@ -11,6 +11,7 @@ ALLOW_MISSING_DEPENDENCIES := true
 BUILD_BROKEN_DUP_RULES := true
 BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
 BUILD_BROKEN_MISSING_REQUIRED_MODULES := true
+BUILD_BROKEN_PLUGIN_VALIDATION := soong-libaosprecovery_defaults soong-libguitwrp_defaults soong-libminuitwrp_defaults soong-vold_defaults
 
 # Architecture
 TARGET_ARCH := arm64
@@ -48,15 +49,15 @@ QCOM_BOARD_PLATFORMS += msmnile
 # Kernel
 TARGET_KERNEL_ARCH := arm64
 TARGET_KERNEL_HEADER_ARCH := arm64
+BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
 BOARD_KERNEL_CMDLINE := androidboot.hardware=qcom androidboot.usbcontroller=a600000.dwc3 service_locator.enable=1 lpm_levels.sleep_disabled=1 loop.max_part=7 kpti=off
 BOARD_KERNEL_CMDLINE += console=ttyMSM0,115200n8 earlycon=msm_geni_serial,0xa90000 androidboot.console=ttyMSM0
 BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
 BOARD_KERNEL_CMDLINE += androidboot.boot_devices=soc/1d84000.ufshc
-BOARD_KERNEL_CMDLINE += printk.devkmsg=on clk_ignore_unused pd_ignore_unused panic=5 swiotlb=2048
-BOARD_KERNEL_CMDLINE += androidboot.fstab_suffix=qcom sysctl.kernel.firmware_config.force_sysfs_fallback=1 log_buf_len=4M firmware_class.path=/vendor/firmware_mnt/image irqchip.gicv3_pseudo_nmi=1
+BOARD_KERNEL_CMDLINE += audit=0
 BOARD_KERNEL_BASE := 0x00000000
 BOARD_KERNEL_PAGESIZE := 4096
-BOARD_MKBOOTIMG_ARGS := --ramdisk_offset 0x01000000 --tags_offset 0x00000100
+BOARD_MKBOOTIMG_ARGS := --kernel_offset 0x00008000 --ramdisk_offset 0x01000000 --second_offset 0x00000000 --tags_offset 0x00000100
 BOARD_BOOT_HEADER_VERSION := 1
 BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
 TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/Image.gz-dtb
@@ -101,6 +102,7 @@ PLATFORM_VERSION := 99.87.36
 PLATFORM_VERSION_LAST_STABLE := $(PLATFORM_VERSION)
 PLATFORM_SECURITY_PATCH := 2099-12-31
 VENDOR_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
+BOOT_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
 
 # AVB
 BOARD_AVB_ENABLE := true
@@ -124,9 +126,17 @@ AERA_USE_EXTREME_COMPRESSION := 1
 
 # Recovery
 TARGET_RECOVERY_DEVICE_DIRS += $(DEVICE_PATH)
+TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery/root/system/etc/recovery.fstab
 TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
 RECOVERY_SDCARD_ON_DATA := true
 TARGET_RECOVERY_QCOM_RTC_FIX := true
+
+TARGET_RECOVERY_DEVICE_MODULES += \
+    libion \
+    libxml2 \
+    vendor.display.config@1.0 \
+    vendor.display.config@2.0 \
+    libdisplayconfig.qti
 
 # AERA - Display & Theme
 AERA_BRIGHTNESS_PATH := "/sys/class/backlight/panel0-backlight/brightness"
@@ -135,6 +145,11 @@ AERA_DEFAULT_BRIGHTNESS := 1200
 AERA_THEME := portrait_hdpi
 AERA_FRAMERATE := 60
 AERA_UI_ADAPTIVE_RESOLUTION := true
+AERA_SCREEN_H := 2340
+AERA_STATUS_INDENT_LEFT := 48
+AERA_STATUS_INDENT_RIGHT := 48
+AERA_SCREEN_BLANK_ON_BOOT := true
+AERA_NO_SCREEN_BLANK := true
 
 # AERA - Hardware & Input
 AERA_INPUT_BLACKLIST := "hbtp_vm"
@@ -143,8 +158,12 @@ AERA_EXCLUDE_DEFAULT_USB_INIT := true
 
 # AERA - File System & Storage
 AERA_INCLUDE_NTFS_3G := true
+AERA_NO_EXFAT_FUSE := true
 AERA_PREPARE_DATA_MEDIA_EARLY := true
 AERA_ENABLE_FS_COMPRESSION := true
+AERA_UNBIND_SDCARD_F2FS := 1
+AERA_WIPE_METADATA_AFTER_DATAFORMAT := 1
+AERA_USE_SERIALNO_PROPERTY_FOR_DEVICE_ID := true
 
 # AERA - System Tools
 AERA_EXCLUDE_APEX := true
@@ -168,6 +187,7 @@ TARGET_USES_LOGD := true
 AERA_INCLUDE_LOGCAT := true
 
 # AERA - Logical partition tools
+AERA_ENABLE_ALL_PARTITION_TOOLS := 1
 AERA_INCLUDE_LPDUMP := true
 AERA_INCLUDE_LPTOOLS := true
 
@@ -176,6 +196,3 @@ AERA_INCLUDE_FASTBOOTD := true
 
 # AERA - Vibrator
 AERA_SUPPORT_INPUT_AIDL_HAPTICS := true
-
-# AERA - Adreno/GPU graphics dependencies
-AERA_UI_LEGACY_KGSL_GPU := true

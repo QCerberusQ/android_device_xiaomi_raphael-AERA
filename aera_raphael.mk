@@ -19,35 +19,12 @@
 #
 
 # AERA product configuration, inherited by twrp_raphael.mk.
-AERA_USE_GREEN_LED := 0
-AERA_NO_MIUI_PATCH_WARNING := 1
+# Display metrics (AERA_SCREEN_H, AERA_STATUS_INDENT_*), partition tools,
+# and f2fs/metadata switches are placed in BoardConfig.mk so Soong and early
+# Make bridges consume them.
 
-# Dinamik bölümler (Retrofit) için gerekli araçlar
-AERA_ENABLE_ALL_PARTITION_TOOLS := 1
-
-# Hızlı yedekleme listesi
+# Quick backup list
 AERA_QUICK_BACKUP_LIST := /boot;/data;
 
-# Patch AVB 2.0
-AERA_PATCH_AVB20 := 1
-
-# OTA Ayarları
-AERA_SUPPORT_ALL_BLOCK_OTA_UPDATES := 1
-AERA_FIX_OTA_UPDATE_MANUAL_FLASH_ERROR := 1
-AERA_DISABLE_MIUI_OTA_BY_DEFAULT := 1
-
-# Format ve Metadata Ayarları
-AERA_UNBIND_SDCARD_F2FS := 1
-AERA_WIPE_METADATA_AFTER_DATAFORMAT := 1
-AERA_FBE_METADATA_MOUNT_IGNORE := 1
-
-# AERA's native opt-in replaces the legacy FRP addon.
-AERA_ENABLE_FRP_WIPE := 1
-
-# Wlan
-AERA_ENABLE_WLAN := 1
-
-# Ekran ve Arayüz Optimizasyonları
-AERA_SCREEN_H := 2340
-AERA_STATUS_INDENT_LEFT := 48
-AERA_STATUS_INDENT_RIGHT := 48
+# Enable WLAN only after a 4.14-compatible Wi-Fi bring-up is added.
+# AERA_ENABLE_WLAN := 1

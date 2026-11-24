@@ -1,5 +1,4 @@
 import /init.recovery.qcom_decrypt.rc
-import /init.recovery.wifi.rc
 
 on init
     write /sys/class/backlight/panel0-backlight/brightness 200
@@ -10,12 +9,6 @@ on fs
     wait /dev/block/bootdevice/by-name/system 5
     exec u:r:recovery:s0 -- /system/bin/merge-fstab.sh
 
-# Start the QTI crypto stack before the recovery service. AERA decrypts
-# through keystore2, which only registers once it sees Keymaster; with the
-# usual trigger (crypto.ready from prepdecrypt, run when the recovery has
-# already found /data encrypted) the recovery asks keystore2 for the
-# metadata key before it exists and /data stays locked. prepdecrypt does
-# nothing else here (no SETPATCH), so starting the stack early is the same.
 on post-fs-data
     chmod 0660 /dev/qseecom
     chown system drmrpc /dev/qseecom
@@ -26,20 +19,12 @@ on post-fs-data
 on property:vendor.sys.listeners.registered=true
     start keymaster-4-1-qti
 
-# The recovery decrypts /data as soon as it starts: let it wait (at most
-# 15 s) until keystore2 is registered, which it does once Keymaster is up.
-service recovery /system/bin/sh -c "/system/bin/raphael_keystore_wait 15; exec /system/bin/recovery"
-    override
-    socket recovery stream 422 system system
-    seclabel u:r:recovery:s0
-    user root
-
 service vendor.qti.vibrator /vendor/bin/hw/vendor.qti.hardware.vibrator.service
     user root
     group root
     disabled
     setenv LD_LIBRARY_PATH /vendor/lib64:/vendor/lib:/system/lib64:/system/lib:/sbin
-    seclabel u:r:recovery:s0	
+    seclabel u:r:recovery:s0
 
 on boot
     start health-hal-2-1
